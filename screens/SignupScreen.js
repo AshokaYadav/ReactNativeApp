@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import axios from 'axios';
 
 export default function SignupScreen({ navigation }) {
   const [firstName, setFirstName] = useState('');
@@ -11,29 +12,36 @@ export default function SignupScreen({ navigation }) {
       Alert.alert('Error', 'All fields are required!');
       return;
     }
+  
+    if (isNaN(age) || parseInt(age, 10) <= 0) {
+      Alert.alert('Error', 'Age must be a valid positive number!');
+      return;
+    }
 
     try {
-      const response = await fetch('https://dummyjson.com/users/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          age: parseInt(age, 10),
-        }),
+      const response = await axios.post('https://dummyjson.com/users/add', {
+        firstName,
+        lastName,
+        age: age,
       });
-
-      const result = await response.json();
-
-      if (response.ok) {
+  
+      console.log('API Response:', response.data); // Debugging line
+  
+      if (response) {
         Alert.alert('Success', 'Signup successful!');
         navigation.navigate('Login');
       } else {
-        Alert.alert('Error', result.message || 'Something went wrong');
+        Alert.alert('Error', response.data?.message || 'Something went wrong!');
       }
     } catch (error) {
-      console.error(error);
-      Alert.alert('Error', 'Failed to sign up. Please try again later.');
+      console.error('Error:', error); // Debugging line
+      if (error.response) {
+        Alert.alert('Error', error.response.data?.message || 'Server Error!');
+      } else if (error.request) {
+        Alert.alert('Error', 'No response from the server. Please try again later!');
+      } else {
+        Alert.alert('Error', 'An unknown error occurred!');
+      }
     }
   };
 
