@@ -45,7 +45,9 @@ export default function HomeScreen() {
     <View style={styles.productCard}>
       <Image source={{ uri: item.thumbnail }} style={styles.productImage} />
       <View style={styles.productDetails}>
-        <Text style={styles.productName}>{item.title}</Text>
+        <Text style={styles.productName} numberOfLines={1} ellipsizeMode="tail">
+          {item.title}
+        </Text>
         <Text style={styles.productPrice}>${item.price}</Text>
         <Text style={styles.productCategory}>{item.category}</Text>
       </View>
@@ -54,9 +56,9 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Location */}
-      <View style={styles.locationContainer}>
-        <Icon name="location-outline" size={20} color="#000" />
+      {/* Header with Location */}
+      <View style={styles.header}>
+        <Icon name="location-outline" size={24} color="#fff" />
         <Text style={styles.locationText}>
           {readableLocation?.formattedAddress || location}
         </Text>
@@ -66,13 +68,14 @@ export default function HomeScreen() {
       <TextInput
         style={styles.searchBox}
         placeholder="Search products..."
+        placeholderTextColor="#aaa"
         value={searchQuery}
         onChangeText={setSearchQuery}
       />
 
       {/* Product List */}
       {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#f97316" />
       ) : (
         <FlatList
           data={filteredProducts}
@@ -88,63 +91,76 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
-    padding: 10,
+    backgroundColor: '#f5f7fa',
   },
-  locationContainer: {
+  header: {
+    backgroundColor: '#4a90e2',
+    padding: 15,
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
   },
   locationText: {
-    marginLeft: 5,
-    fontSize: 14,
-    color: '#555',
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: '600',
   },
   searchBox: {
+    margin: 10,
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 10,
+    borderRadius: 10,
+    padding: 12,
     backgroundColor: '#fff',
-  },
-  productList: {
-    paddingBottom: 20,
-  },
-  productCard: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
   },
+  productList: {
+    paddingBottom: 20,
+    paddingHorizontal: 10,
+  },
+  productCard: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 15,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
   productImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
+    width: 100,
+    height: 100,
+    borderRadius: 12,
   },
   productDetails: {
-    marginLeft: 10,
+    marginLeft: 15,
     justifyContent: 'center',
+    flex: 1, // Prevents overflow of text
   },
   productName: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: '700',
     marginBottom: 5,
+    color: '#333',
+    maxWidth: '100%', // बॉक्स के अंदर तक सीमित
+    overflow: 'hidden', // टेक्स्ट को कट करें
+    textOverflow: 'ellipsis', // अंत में '...' दिखाए
+    whiteSpace: 'nowrap', // एक ही लाइन में रखें
   },
   productPrice: {
-    fontSize: 14,
-    color: '#555',
+    fontSize: 16,
+    color: '#f97316',
     marginBottom: 5,
   },
   productCategory: {
-    fontSize: 12,
+    fontSize: 14,
     color: '#888',
   },
 });

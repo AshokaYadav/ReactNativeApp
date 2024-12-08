@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 
 export default function SignupScreen({ navigation }) {
   const [firstName, setFirstName] = useState('');
@@ -7,21 +7,19 @@ export default function SignupScreen({ navigation }) {
   const [age, setAge] = useState('');
 
   const handleSignup = async () => {
-    // Validate input
     if (!firstName || !lastName || !age) {
       Alert.alert('Error', 'All fields are required!');
       return;
     }
 
     try {
-      // Make the API call to create a user
       const response = await fetch('https://dummyjson.com/users/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           firstName,
           lastName,
-          age: parseInt(age, 10), // Convert age to a number
+          age: parseInt(age, 10),
         }),
       });
 
@@ -29,7 +27,7 @@ export default function SignupScreen({ navigation }) {
 
       if (response.ok) {
         Alert.alert('Success', 'Signup successful!');
-        navigation.navigate('Login'); // Navigate to Login Page
+        navigation.navigate('Login');
       } else {
         Alert.alert('Error', result.message || 'Something went wrong');
       }
@@ -41,27 +39,39 @@ export default function SignupScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Signup</Text>
+      <Text style={styles.title}>Create Account</Text>
+      <Text style={styles.subtitle}>Sign up to get started!</Text>
       <TextInput
         style={styles.input}
         placeholder="First Name"
+        placeholderTextColor="#aaa"
         value={firstName}
         onChangeText={setFirstName}
       />
       <TextInput
         style={styles.input}
         placeholder="Last Name"
+        placeholderTextColor="#aaa"
         value={lastName}
         onChangeText={setLastName}
       />
       <TextInput
         style={styles.input}
         placeholder="Age"
+        placeholderTextColor="#aaa"
         value={age}
         onChangeText={setAge}
         keyboardType="numeric"
       />
-      <Button title="Signup" onPress={handleSignup} />
+      <TouchableOpacity style={styles.button} onPress={handleSignup}>
+        <Text style={styles.buttonText}>Sign Up</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, styles.loginButton]}
+        onPress={() => navigation.navigate('Login')}
+      >
+        <Text style={styles.buttonText}>Go to Login</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -70,18 +80,55 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
+    backgroundColor: '#f4f4f8',
   },
   title: {
-    fontSize: 24,
-    marginBottom: 20,
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 30,
     textAlign: 'center',
   },
   input: {
+    width: '100%',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#ddd',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  button: {
+    width: '100%',
+    backgroundColor: '#f97316',
+    paddingVertical: 15,
+    alignItems: 'center',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
     marginBottom: 10,
-    padding: 10,
-    borderRadius: 5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  loginButton: {
+    backgroundColor: '#4ade80',
   },
 });
